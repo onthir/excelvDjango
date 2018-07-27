@@ -1,0 +1,11 @@
+{% extends 'analyze/base.html' %}
+
+{% block content %}
+
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="submit" value="Delete">
+</form>
+<a href="../" class="btn">Cancel</a>
+
+{% endblock %}

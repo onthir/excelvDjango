@@ -1,0 +1,61 @@
+{% extends 'analyze/base.html' %}
+
+{% load staticfiles %}
+{% block content %}
+
+<div class="row">
+    <div class="col m4">
+        <div class="card">
+            <div class="card-stacked">
+                <div class="card-content">
+                    <h5>Superuser's Actions</h5>
+                    <a href="/admin/auth/user/add/" class="btn">Register New User</a>
+                    <br><br>
+                    <a href="{% url 'analyze:review_list' %}" class="btn" style="background: steelblue;">Check Review List</a>
+                </div>
+            </div>
+        </div>
+        <!-- all users -->
+        <div class="card">
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <h5>Registered Users</h5>
+                        <ul class="collection">
+                            {% for a in allUsers %}
+                            <li class="collection-item avatar">
+                                <img src="{% static 'images/user.jpeg' %}" alt="{{ a.username }}" class="circle">
+                                <span class="title">{{ a.username }}</span><br>
+                                <a href="{% url 'accounts:profile' a.username %}">View Profile</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </div>
+        <h5>Here are All Files in the Database</h5>
+    <ul class="collection">
+        {% for f in files %}
+            <li class="collection-item avatar">
+              <img src="{% static 'images/xlsx.png' %}" alt="Excel" class="circle">
+              <span class="title">{{ f.name }}</span>
+              <p>{{ f.efile.size|filesizeformat }}<br>
+                 <a href="{% url 'analyze:filedetails' f.slug %}">View</a><br>
+                 {% if request.user == f.user or request.user.is_superuser %}
+                    <a href="{% url 'analyze:delete_file' f.slug %}"><i class="material-icons">delete</i></a>
+                    <a href="{% url 'analyze:edit_file' f.slug %}"><i class="material-icons">edit</i></a><br>
+                 {% endif %}
+                 <span>Uploaded By <a href="{% url 'accounts:profile' f.user %}">{{ f.user }}</a> on {{ f.uploaded_on }}</span>
+                 {% if f in reviews.fileInstance.all %}
+                 <i>(Already in the review list)</i>
+                 <a href="{% url 'analyze:remove_from_review' f.slug %}">Remove From List</a>
+                 {% else %}
+                 <a href="{% url 'analyze:add_to_review' f.slug %}">Add To Review list</a>
+                {% endif %}
+              </p>
+              <a href="{% url 'analyze:download' f.efile.path %}" class="secondary-content"><i class="material-icons">file_download</i></a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+{% endblock %}

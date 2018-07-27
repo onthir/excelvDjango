@@ -1,0 +1,65 @@
+{% extends 'analyze/base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-stacked">
+      <div class="card-content">
+        <h5>{{ efile.name }}</h5>
+        <h5>Uploaded By: <i>{{ efile.user }}</i></h5>
+        <h5>Uploaded On: <i>{{ efile.uploaded_on }}</i></h5>
+        <a href="{% url 'analyze:download' efile.efile.path %}" class="btn btn-danger">Download</a>
+        <a href="{% url 'analyze:print_file' efile.efile.path %}" class="btn btn-primary">Print</a>
+        {% if request.user == efile.user or request.user.is_superuser %}
+            <a href="{% url 'analyze:edit_file' efile.slug %}" class="btn">Edit</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% if extension == '.xlsx' or extension == '.xls' %}
+  <!-- contents of the table -->
+  <div class="row">
+    <div class="card">
+      <div class="card-stacked">
+        <div class="card-content">
+          <table class="bordered striped centered highlight responsive-table">
+            <tbody>
+                {% for d in data %}
+                <tr>
+                    {% for i in d %}
+                  <td>{{ i }}</td>
+                  {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+{% endif %}
+
+
+{% if extension == '.csv' %}
+<!-- table -->
+<div class="row">
+    <div class="card">
+      <div class="card-stacked">
+        <div class="card-content">
+          <table class="bordered striped centered highlight responsive-table">
+                <tbody>
+                    {% for d in data %}
+          <tr>
+              {% for i in d %}
+            <td>{{ i }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+                </tbody>
+          </table>
+        </div>
+      </div>
+</div>
+{% endif %}
+
+
+{% endblock %}

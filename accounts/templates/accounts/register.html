@@ -1,0 +1,16 @@
+{% extends 'analyze/base.html' %}
+
+{% block content %}
+
+<h1>Register new uesr</h1>
+
+<div class="container">
+    <div class="form-group">
+        <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" class="btn btn-danger" value="Sign Up">
+        </form>
+    </div>
+</div>
+{% endblock %}

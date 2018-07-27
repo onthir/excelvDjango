@@ -1,0 +1,28 @@
+{% extends 'analyze/base.html' %}
+
+{% load staticfiles %}
+{% block content %}
+
+<div class="container">
+    <h5>Here are All your Files</h5>
+    <a href="{% url 'analyze:upload' %}" class="btn"> <i class="material-icons">file_upload</i></a> Upload
+<ul class="collection">
+    {% for f in files %}
+        <li class="collection-item avatar">
+          <img src="{% static 'images/xlsx.png' %}" alt="Excel" class="circle">
+          <span class="title">{{ f.name }}</span>
+          <p>{{ f.efile.size|filesizeformat }}<br>
+            {% if request.user == f.user or request.user.is_superuser %}
+            <a href="{% url 'analyze:delete_file' f.slug %}"><i class="material-icons">delete</i></a>
+            <a href="{% url 'analyze:edit_file' f.slug %}"><i class="material-icons">edit</i></a><br>
+            {% endif %}
+             <a href="{% url 'analyze:filedetails' f.slug %}">View</a><br>
+             <span>Uploaded By <a href="{% url 'accounts:profile' f.user %}">{{ f.user }}</a> on {{ f.uploaded_on }}</span>
+
+          </p>
+          <a href="{% url 'analyze:download' f.efile.path %}" class="secondary-content"><i class="material-icons">file_download</i></a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+{% endblock %}

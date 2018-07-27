@@ -1,0 +1,36 @@
+{% extends 'analyze/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+<!-- login form within a card -->
+<div class="card">
+    <div class="card-stacked">
+    <div class="card-content">
+        <h4>Login To Your Account</h4>
+        <!-- form -->
+        <div class="form-group">
+            {% if error_message %}
+            <i style="color:red;">{{ error_message }}</i>
+            {% endif %}
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <label for="username">Username</label>
+                    <input type="text" name="username" class="form-control">
+    
+                    <label for="password">Password</label>
+                    <input type="password" name="password" class="form-control">
+    
+                    <br>
+                <input type="submit" class="btn btn-danger" value="Login">
+            </form>
+        </div>
+    </div>
+    <div class="card-action">
+        <i>Status: Logged Off</i>
+    </div>
+    </div>
+</div>
+</div>
+{% endblock %}
