@@ -15,5 +15,10 @@ urlpatterns = [
     url(r'^add-to-review/myfiles/(?P<slug>.*)/$', views.add_to_review, name='add_to_review'),
     url(r'^remove-from-review/myfiles/(?P<slug>.*)/', views.remove_from_review, name='remove_from_review'),
     url(r'^review-list/$', views.review_list, name='review_list'),
-    url(r'^delete/myfiles/(?P<slug>.*)/$', views.delete_file, name='delete_file')
+    url(r'^delete/myfiles/(?P<slug>.*)/$', views.delete_file, name='delete_file'),
+    url(r'^create-compare-group/$', views.create_compare_group, name='create_compare_group'),
+    url(r'^comparelist/$', views.comparelist, name='comparelist'),
+    url(r'^getresults/(?P<id>\d+)/$', views.get_results, name='get_results'),
+    url(r'^edit/comparelist/(?P<id>\d+)/$', views.edit_compare_list, name='edit_compare_list'),
+    url(r'^delete/comparelist/(?P<id>\d+)/$', views.delete_compare_list, name='delete_compare_list'),
 ]

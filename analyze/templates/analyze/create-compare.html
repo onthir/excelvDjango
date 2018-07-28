@@ -1,0 +1,16 @@
+{% extends 'analyze/base.html' %}
+
+
+{% block content %}
+
+
+<div class="container">
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <br><br>
+        <input type="submit" value="Create Group" class="btn">
+    </form>
+</div>
+
+{% endblock %}

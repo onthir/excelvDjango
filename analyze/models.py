@@ -36,3 +36,12 @@ class ReviewList(models.Model):
 
     def __str__(self):
         return self.title
+
+class Compare(models.Model):
+    title = models.CharField(max_length=500)
+    file1 = models.ForeignKey(File, related_name='compareFile1')
+    file2 = models.ForeignKey(File, related_name='compareFile2')
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

@@ -1,0 +1,17 @@
+{% extends 'analyze/base.html' %}
+
+
+{% block content %}
+
+
+<div class="container">
+    <h2>Edit: {{ compareobj.title }}</h2>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <br><br>
+        <input type="submit" value="Save" class="btn">
+    </form>
+</div>
+
+{% endblock %}

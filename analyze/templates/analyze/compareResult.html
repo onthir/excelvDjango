@@ -1,0 +1,20 @@
+{% extends 'analyze/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+    <h5>{{ testcase.title }}</h5>
+    <h5><i>Comparing <strong> <span style="color: green;">{{ testcase.file1.efile }}</span> and <span style="color: orange;">{{ testcase.file2.efile }}</span></strong></i></h5>
+    <ul class="collection">
+        {% if results %}
+        {% for r in results %}
+            <li class="collection-item">{{ r }}</li>
+        {% endfor %}
+        {% else %}
+        <i>No Difference In Two Files</i>
+        {% endif %}
+    </ul>
+</div>
+
+{% endblock %}

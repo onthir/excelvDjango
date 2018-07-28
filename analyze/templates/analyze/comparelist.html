@@ -1,0 +1,25 @@
+{% extends 'analyze/base.html' %}
+
+{% load staticfiles %}
+{% block content %}
+
+<div class="container">
+    <h5>Here are The Latest Compare Lists</h5>
+    <a href="{% url 'analyze:create_compare_group' %}" class="btn" style="background: orange;">Create Compare Group</a>
+<ul class="collection">
+    {% for f in comparelists %}
+        <li class="collection-item avatar">
+          <img src="{% static 'images/xlsx.png' %}" alt="Excel" class="circle">
+          <span class="title">{{ f.title }}</span><br>
+          <i>{{ f.date }}</i>
+            <h6> <strong>1. {{ f.file1.efile }}</strong></h6>
+            <h6> <strong>2. {{ f.file2.efile }}</strong></h6>
+          <a href="{% url 'analyze:get_results' f.id %}" class="btn" style="background: #007dc5;">Get Results</a>
+          <a href="{% url 'analyze:edit_compare_list' f.id %}" class="btn" style="background: #8ec531;">Edit Compare Group</a>
+            <a href="{% url 'analyze:delete_compare_list' f.id %}" class="btn" style="background: #e6583d;">Delete Compare Group</a>
+        </p>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+{% endblock %}

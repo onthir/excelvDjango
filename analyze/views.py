@@ -9,7 +9,9 @@ from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
 import os
-
+from .models import *
+from itertools import zip_longest
+from xlrd import XLRDError
 
 """
 ADD TO REVIEW LIST GLOBAL FUNCITON
@@ -62,6 +64,115 @@ def home(request):
     }   
     return render(request, 'analyze/index.html', context)
 
+"""
+MAIN FUNCTION TO COMPARE EXCEL FILES
+"""
+# compare two excel files
+def compare_excel(file1, file2):
+    ex1 = str(file1)[str(file1).index("."):]
+    ex2 = str(file2)[str(file2).index("."):]
+
+    if ex1 == ex2:
+        if ex1 == '.xls' or ex1 == '.xlsx':
+            try:
+                rb1 = xlrd.open_workbook(file1)
+                rb2 = xlrd.open_workbook(file2)
+
+                sheet1 = rb1.sheet_by_index(0)
+                sheet2 = rb2.sheet_by_index(0)
+                
+                results = []
+                for rownum in range(max(sheet1.nrows, sheet2.nrows)):
+
+                    if rownum < sheet1.nrows:
+                        try:
+                            row_rb1 = sheet1.row_values(rownum)
+                            row_rb2 = sheet2.row_values(rownum)
+                            
+                            for colnum, (c1, c2) in enumerate(zip_longest(row_rb1, row_rb2)):
+                                if c1 != c2:
+                                    text = ("Row {} Col {} - {} != {}".format(rownum+1, colnum+1, c1, c2))
+                                    results.append(text)
+                        except:
+                            results.append("Error")
+                    else:
+                        text = ("Row {} missing".format(rownum+1))
+                        results.append(text)
+                return results
+            except XLRDError as e:
+                print("Unsupported file format")
+        elif ex1 == '.csv' or ex2 == '.csv':
+            # compare csv files
+            with open(file1, 'r') as t1, open(file2, 'r') as t2:
+                fileone = t1.readlines()
+                filetwo = t2.readlines()
+
+                for line in filetwo:
+                    if line not in filetwo:
+                        print(line)
+    else:
+        print("Can't compare two different files")
+        results = ["Can't Compare two different files with different extensions. "]
+        return results
+
+"""
+CREATE COMPARE GROUPS
+"""
+def create_compare_group(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        if request.method == 'POST':
+            form = CompareGroupForm(request.POST or None)
+            if form.is_valid():
+                d = form.save(commit=False)
+                d.save()
+                return redirect("analyze:comparelist")
+        else:
+            form = CompareGroupForm()
+        return render(request, 'analyze/create-compare.html', {'form': form})
+    return redirect("analyze:home")
+
+def comparelist(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        comparelists = Compare.objects.all().order_by('-date')
+        return render(request, 'analyze/comparelist.html', {'comparelists': comparelists})
+    else:
+        return redirect("analyze:home")
+
+def get_results(request, id):
+    if request.user.is_authenticated and request.user.is_superuser:
+        testcase = Compare.objects.get(id=id)
+        # get two files
+        file1 = testcase.file1
+        file2 = testcase.file2
+
+        # compare these two files
+        results = compare_excel(file1.efile.path, file2.efile.path)
+        return render(request, 'analyze/compareResult.html', {'results': results, 'testcase': testcase})
+    else:
+        return redirect("accounts:login")
+# edit comparelist
+def edit_compare_list(request, id):
+    if request.user.is_authenticated and request.user.is_superuser:
+        compareobj = Compare.objects.get(id=id)
+        if request.method == 'POST':
+            form = CompareGroupForm(request.POST, instance=compareobj)
+            if form.is_valid():
+                data = form.save(commit=False)
+                data.save()
+                return redirect("analyze:comparelist")
+        else:
+            form = CompareGroupForm(instance=compareobj)
+        return render(request, 'analyze/edit-compare.html', {'form': form, 'compareobj': compareobj})
+    else:
+        return redirect("analyze:home")
+# delete comparelist
+def delete_compare_list(request, id):
+    if request.user.is_authenticated and request.user.is_superuser:
+        compareobj = Compare.objects.get(id=id)
+        compareobj.delete()
+        return redirect("analyze:comparelist")
+    else:
+        return redirect("analyze:home")
 # upload file
 """
 THIS FUNCTION HANDLES THE FILE UPLOAD USING THE UPLOADFILEFORM
@@ -246,3 +357,4 @@ def delete_file(request, slug):
         return redirect("analyze:myfiles")
     else:
         return redirect("analyze:myfiles")
+

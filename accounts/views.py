@@ -73,3 +73,11 @@ def profile(request, user):
         return render(request, 'accounts/userprofile.html', context)
     else:
         return rendirect("accounts:login")
+
+
+"""
+DELETE USER
+CLEANER VIEW EXCEL
+CSV COMPARISION
+
+"""
