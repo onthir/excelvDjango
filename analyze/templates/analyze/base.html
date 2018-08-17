@@ -2,22 +2,40 @@
   <!DOCTYPE html>
   <html>
     <head>
-      <!--Import Google Icon Font-->
+      
+      <title>
+      {% block title %}
+        Home
+      {% endblock %}
+      | MJHS Excel Portal
+      </title>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-      <!--Import materialize.css-->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
-
-      <!--Let browser know website is optimized for mobile-->
+          <!-- Compiled and minified CSS -->
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+      
+          <!-- Compiled and minified JavaScript -->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+            <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       {% load staticfiles %}
       <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+      <link rel="icon" href="https://www.mjhs.org/wp-content/uploads/2018/04/cropped-Bug-32x32.jpg" sizes="32x32" />
+
     </head>
 
 <body>
     <nav style="background: #007DC3;">
         <div class="nav-wrapper">
           <a href="{% url 'analyze:home' %}" class="brand-logo red-text"><img src="{% static 'images/logo.png' %}" alt="Logo" width="400"></a>   
-            <ul class="hide-on-med-and-down right">               
+            <ul class="hide-on-med-and-down right"> 
+                {% if request.user.is_authenticated %}  
+                <li><a class='dropdown-trigger white-text' href='#' data-target='dropdown1'>{{ request.user.username |upper }}</a></li>
+
+                {% else %}
+                <li><a href="{% url 'accounts:login' %}" class="white-text">Login</a></li>
+                {% endif %}              
                 <li>    
                    <div class="center row">
                       <div class="col s12 " >
@@ -32,35 +50,40 @@
                         </div>
                       </div>          
                   </li>              
-                  {% if request.user.is_authenticated %}  
-                <li><a href="{% url 'analyze:myfiles' %}" class="white-text">My Files</a></li>
-                <li><a href="{% url 'analyze:upload' %}" class="white-text">Upload File</a></li>
-                <li><a href="{% url 'accounts:logout' %}" class="white-text">Logout</a></li>
 
-                {% else %}
-                <li><a href="{% url 'accounts:login' %}" class="white-text">Login</a></li>
-                {% endif %}
 
-                {% if request.user.is_superuser %}
-                  <li><a href="{% url 'analyze:superuser_den' %}" class="white-text">Superuser's Den</a></li>
-                  <li><a href="{% url 'analyze:comparelist' %}" class="white-text">Compare List</a></li>
-                  <li><a href="{% url 'analyze:review_list' %}" class="white-text">Review List</a></li>
-                {% endif %}
+
             </ul>
+            <script type="text/javascript">
+              $('.dropdown-trigger').dropdown();
+            </script>
+
+            <!-- dropdown content -->
+  <!-- Dropdown Structure -->
+            <ul id='dropdown1' class='dropdown-content'>
+                <li><a href="{% url 'analyze:myfiles' %}">My Files</a></li>
+              <li><a href="{% url 'analyze:upload' %}">Upload Excel Files</a></li>
+              <li class="divider" tabindex="-1"></li>
+              {% if request.user.is_superuser %}
+              <li><a href="{% url 'analyze:superuser_den' %}">Superuser's Den</a></li>
+              <li><a href="{% url 'analyze:comparelist' %}">Compare List</a></li>
+              <li><a href="{% url 'analyze:review_list' %}">Review List</a></li>
+            {% endif %}
+            <li class="divider" tabindex="-1"></li>
+            <li><a href="{% url 'accounts:logout' %}"><i class="material-icons">person_pin</i>Logout</a></li>
+
+            </ul>
+            <!-- end dropdown content -->
+            <script>
+              $('.dropdown-trigger').dropdown({hover:true, constrainWidth:false});
+            </script>
         </div>
       </nav> 
  
     {% block content %}
 
-    {% endblock %}
-      <!--JavaScript at end of body for optimized loading-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
-      
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          var elems = document.querySelectorAll('select');
-          var instances = M.FormSelect.init(elems, options);
-        });
-      </script>
+    {% endblock %}      
+
+
     </body>
 </html>

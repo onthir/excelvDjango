@@ -3,22 +3,54 @@
 {% load staticfiles %}
 {% block content %}
 
-<div class="section no-pad-bot" id="index-banner">
-        <div class="container">
-          <br><br>
-          <h1 class="header center" style="color: #007DC3;;">MJHS Health System</h1>
-          <div class="row center">
-            <h5 class="header col s12 light 8CC63F">Caring Every Minute, Every Day</h5>
-          </div>
-          <div class="row center">
-            <a href="#" id="download-button" class="btn-large waves-effect waves-light" style="background: #8CC63F;">Get Started</a>
-          </div>
-          <br><br>
-    
-        </div>
 
-{% if request.user.is_authenticated %}
-{% endif %}
+<div class="slider">
+  <ul class="slides">
+    <li>
+      <img src="{% static 'images/1.jpg' %}"> <!-- random image -->
+      <div class="caption center-align">
+        <h3 id="ctext">This is our big Tagline!</h3>
+        <h5 class="light grey-text text-lighten-3" id="subtext">Here's our small slogan.</h5>
+      </div>
+    </li>
+    <li>
+      <img src="{% static 'images/2.jpg' %}"> <!-- random image -->
+      <div class="caption left-align">
+        <h3 id="ctext">Left Aligned Caption</h3>
+        <h5 class="light grey-text text-lighten-3" id="subtext">Here's our small slogan.</h5>
+      </div>
+    </li>
+    <li>
+      <img src="{% static 'images/3.jpg' %}"> <!-- random image -->
+      <div class="caption right-align">
+        <h3 id="ctext">Right Aligned Caption</h3>
+        <h5 class="light grey-text text-lighten-3" id="subtext">Here's our small slogan.</h5>
+      </div>
+    </li>
+    <li>
+      <img src="{% static 'images/4.jpg' %}"> <!-- random image -->
+      <div class="caption center-align">
+        <h3 id="ctext">This is our big Tagline!</h3>
+        <h5 class="light grey-text text-lighten-3" id="subtext">Here's our small slogan.</h5>
+      </div>
+    </li>
+  </ul>
+</div>
+<script type="text/javascript">
+ $(document).ready(function(){
+    $('.slider').slider({full_width: true});
+  });
+</script>
 
+<!-- about us -->
+
+<h3 class="center-align">
+  About Us
+</h3>
+<p>
+    MJHS is one of the largest not-for-profit health systems in the region. Our range of health care services include home care, hospice and palliative care for adults and children, two skilled centers for rehabilitation and nursing care: Isabella in northern Manhattan and Menorah Center in Brooklyn, as well as the research-based MJHS Institute for Innovation in Palliative Care. We also offer health plans for Medicare and dual-eligible individuals.
+
+    As a not-for-profit organization, many of our programs and services are made possible, in part, through support to the MJHS Foundation. The generosity of grateful families, private and corporate donors and grants, as well as our own employees, support our specialized services not reimbursed by government programs or private insurance.
+</p>
 
 {% endblock %}

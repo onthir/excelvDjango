@@ -1,20 +1,52 @@
 {% extends 'analyze/base.html' %}
 
+{% block title %}
+Compare Result
+{% endblock %}
+
 {% block content %}
+<br><br>
+<div class="row">
+        <div class="col m6" style="background: rgb(63, 209, 87);">
+<h5>File 1 Reports</h5>
+<p><i>The below result shows what was changed or deleted from File 2.</i></p>
 
+            <div class="card">
+                <div class="card-stacked">
+                    <div class="card-content">
+                      <ul class="collection">
 
-<div class="container">
-    <h5>{{ testcase.title }}</h5>
-    <h5><i>Comparing <strong> <span style="color: green;">{{ testcase.file1.efile }}</span> and <span style="color: orange;">{{ testcase.file2.efile }}</span></strong></i></h5>
-    <ul class="collection">
-        {% if results %}
-        {% for r in results %}
-            <li class="collection-item">{{ r }}</li>
-        {% endfor %}
-        {% else %}
-        <i>No Difference In Two Files</i>
-        {% endif %}
-    </ul>
+                        {% for r in repl1 %}
+                        {% if r in repl2 %}
+                            {% else %}
+                            <li class="collection-item"><strong>{{ r }}</strong></li>
+                        {% endif %}
+                    {% endfor %}
+                      </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col m6" style="background: rgb(63, 209, 87);">
+<h5>File 2 Reports</h5>
+<p>Updated from File 1</p>
+            <div class="card">
+                <div class="card-stacked">
+                    <div class="card-content">
+                      <ul class="collection">
+
+                        {% for r in repl2 %}
+                        {% if r in repl1 %}
+                            {% else %}
+                            <li class="collection-item">{{ r }}</li>
+                        {% endif %}
+                    {% endfor %}
+                      </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
 
 {% endblock %}

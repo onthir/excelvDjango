@@ -67,6 +67,8 @@ def home(request):
 """
 MAIN FUNCTION TO COMPARE EXCEL FILES
 """
+repl1 = []
+repl2 = []
 # compare two excel files
 def compare_excel(file1, file2):
     ex1 = str(file1)[str(file1).index("."):]
@@ -82,6 +84,18 @@ def compare_excel(file1, file2):
                 sheet2 = rb2.sheet_by_index(0)
                 
                 results = []
+
+                # repeat lines or no lines identifier lists
+                del(repl1[:])
+                del(repl2[:])
+                for rownum in range(sheet1.nrows):
+                    repl1.append(sheet1.row_values(rownum))
+                    # data += [sheet1.row_values(rownum)]
+
+                for rownum in range(sheet2.nrows):
+                    repl2.append(sheet2.row_values(rownum))
+
+                    # find changes
                 for rownum in range(max(sheet1.nrows, sheet2.nrows)):
 
                     if rownum < sheet1.nrows:
@@ -91,10 +105,10 @@ def compare_excel(file1, file2):
                             
                             for colnum, (c1, c2) in enumerate(zip_longest(row_rb1, row_rb2)):
                                 if c1 != c2:
-                                    text = ("Row {} Col {} - {} != {}".format(rownum+1, colnum+1, c1, c2))
+                                    text = ("Row {} Col {} - {}  ------> {}".format(rownum+1, colnum+1, c1, c2))
                                     results.append(text)
                         except:
-                            results.append("Error")
+                            results.append("")
                     else:
                         text = ("Row {} missing".format(rownum+1))
                         results.append(text)
@@ -147,7 +161,21 @@ def get_results(request, id):
 
         # compare these two files
         results = compare_excel(file1.efile.path, file2.efile.path)
-        return render(request, 'analyze/compareResult.html', {'results': results, 'testcase': testcase})
+
+        #create the string out of the list
+        rp1 = []
+        rp2 = []
+        for i in repl1:
+            word = ' '.join(x for x in i)
+            rp1.append(word)
+        for j in repl2:
+            word = ' '.join(x for x in j)
+            rp2.append(word)
+
+
+        return render(request, 'analyze/compareResult.html', {'results': results, 'testcase': testcase,
+                                                            'repl1': rp1,
+                                                            'repl2': rp2})
     else:
         return redirect("accounts:login")
 # edit comparelist
